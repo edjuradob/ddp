@@ -1,0 +1,86 @@
+---
+title: "Calculator of Net Wage"
+author: "Edgar Jurado"
+highlighter: highlight.js
+output: html
+job: Wage calculator
+knit: slidify::knit2slides
+mode: selfcontained
+hitheme: tomorrow
+subtitle: Calculator of wage after taxes and by period
+framework: io2012
+widgets: []
+---
+
+## Application
+
+This application is a simple simulator to get the net salary after taxes and by a period of time. It is only needed to enter the brute salary per year and a period of time, and the application will respond with the net salary expected for that period of time and brute salary after taxes.
+
+Disclaimer: This is only a simulation, it has no real values, so don't use it as a guide for real calculations.
+
+
+---
+
+## Parameters
+
+The parameters are:
+
+Yearly salary (in UDS dollars): Add your expected brute salary to make the calculation
+
+Period to calculate salary: The period in wich is paid the salary or the desired period to calculate. I has the following options:
+1. Weekly
+2. 15 days
+3. Monthly
+4. Yearly 
+
+Once you choose the options, you click on the submit button
+
+----
+
+## Calculation methods. Percentage of taxes
+
+We have a calculation by rates of salary and a discount percentage for each rate.
+These are:
+
+1. Until $10000, 10% of taxes
+2. From $10001 to $20000 12% of taxes
+3. From $20001 to $30000 15% of taxes
+4. From $30001 to $50000 20% of taxes
+5. From $50001 to $80000 30% of taxes
+4. More than $80000, 40% of taxes
+
+-----
+## Calculation methods. Period of payment
+
+After we calculate the period of payment, we divide the yearly payment after taxes by the period selected, 52 for weekly, 24 for 15 days, 12 for monthly and 1 for yearly. 
+
+As an example, we'll try $30000 per month.
+
+-----
+```{r}
+getDivPeriods<-function(period){result<-1
+  if (period=="weekly"){result<-52}
+  else if(period=="15 days"){result<-24}
+  else if(period=="monthly"){result<-12} 
+  result
+}
+calculateWage<-function(wage,period){percentage<-0
+  if(wage<10000){percentage<-0.1}
+  else if(wage<20000){percentage<-0.12}
+  else if(wage<=30000){percentage<-0.15}
+  else if(wage<=50000){percentage<-0.2}
+  else if(wage<=80000){percentage<-0.3}
+  else {percentage<-0.4}
+  (as.numeric(wage)*(1-percentage)) /getDivPeriods(period) 
+} 
+calculateWage(30000,"monthly")
+```
+
+------
+## Test application and code
+
+You can test the application in https://edjuradob.shinyapps.io/finalproject/
+
+The code is in https://github.com/edjuradob/ddp
+In the folder w3 is the file project.R where I made all the tests for the model
+
